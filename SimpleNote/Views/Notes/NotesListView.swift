@@ -1,166 +1,268 @@
 import SwiftUI
 
+enum NoteRoute: Hashable {
+    case edit(Int)
+    case create
+}
 
 struct NotesListView: View {
-    @StateObject private var viewModel = NotesViewModel()
+    @StateObject private var viewModel = NotesViewModel(token: TokenManager.shared.getAccessToken() ?? "")
     @State private var searchText: String = ""
+    @State private var path = NavigationPath()
     
     var body: some View {
-        // Main ZStack to layer content
-        ZStack(alignment: .bottom) {
-            // Primary content area
-            VStack(spacing: 0) {
-                if viewModel.isLoading {
-                    ProgressView("Loading notes...")
-                    Spacer()
-                } else if let error = viewModel.errorMessage {
-                    Text("Error: \(error)")
-                        .foregroundColor(.red)
-                        .padding()
-                    Spacer()
-                } else if viewModel.notes.isEmpty {
-                    // Empty State View...
-                    VStack(spacing: 0) {
-                        Spacer()
-                        Image("Journey_Illustration")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .padding(.horizontal, 40)
-                        
-                        Spacer().frame(height: 30)
-                        
-                        Text("Start Your Journey")
-                            .font(.system(size: 28, weight: .bold))
-                            .foregroundColor(.primary)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal, 40)
-                        
-                        Spacer().frame(height: 20)
-                        
-                        VStack(spacing: 8) {
-                            Text("Every big step starts with a small step.")
-                            Text("Note your first idea and start")
-                            Text("your journey!")
-                        }
-                        .font(.system(size: 16))
-                        .foregroundColor(.secondary)
-                        .multilineTextAlignment(.center)
-                        Image("Arrow")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .padding(.horizontal, 80)
-                            .padding(.top, 40)
-                        Spacer()
-                    }
-                    .padding(.bottom, 80)
-                } else {
-                    // Scrollable notes list
-                    ScrollView {
-                        VStack(spacing: 0) {
-                            HStack {
-                                Text("My Notes")
-                                    .font(.system(size: 32, weight: .bold))
-                                    .foregroundColor(.primary)
-                                Spacer()
-                            }
-                            .padding(.horizontal, 20)
-                            .padding(.top, 20)
-                            
-                            HStack(spacing: 8) {
-                                Image(systemName: "magnifyingglass")
-                                    .foregroundColor(.gray)
-                                TextField("Search...", text: $searchText)
-                                    .textFieldStyle(PlainTextFieldStyle())
-                                    .padding(10)
-                                    .background(Color(.systemGray6))
-                                    .cornerRadius(10)
-                            }
-                            .padding(.horizontal, 20)
-                            .padding(.top, 10)
-                            
-                            let columns = [
-                                GridItem(.flexible(), spacing: 12),
-                                GridItem(.flexible(), spacing: 12)
-                            ]
-                            
-                            LazyVGrid(columns: columns, spacing: 12) {
-                                ForEach(viewModel.notes.filter {
-                                    searchText.isEmpty ||
-                                    $0.title.localizedCaseInsensitiveContains(searchText) ||
-                                    $0.description.localizedCaseInsensitiveContains(searchText)
-                                }) { note in
-                                    NoteRowView(note: note)
-                                }
-                            }
-                            .padding(.horizontal, 20)
-                            .padding(.top, 20)
-                        }
-                        .padding(.bottom, 120)
-                    }
-                    .overlay(
-                        Rectangle()
-                            .fill(Color.white)
-                            .frame(height: 70)
-                            .ignoresSafeArea(edges: .top),
-                        
-                        alignment: .top
-                    )
-                    
-
-                }
+        NavigationStack(path: $path) {
+            ZStack(alignment: .bottom) {
+                mainContentView
+                bottomNavigationView
             }
-            .padding(.horizontal)
+            .edgesIgnoringSafeArea(.bottom)
+            .navigationDestination(for: NoteRoute.self) { route in
+                navigationDestination(for: route)
+            }
+            .onAppear {
+                loadNotesIfNeeded()
+            }
+            .onChange(of: path) {
+                print(path)
+            }
+        }
+    }
+    
+    // MARK: - Main Content View
+    @ViewBuilder
+    private var mainContentView: some View {
+        VStack(spacing: 0) {
+            if viewModel.isLoading {
+                loadingView
+            } else if let error = viewModel.errorMessage {
+                errorView(error: error)
+            } else if viewModel.notes.isEmpty {
+                emptyStateView
+            } else {
+                notesListView
+            }
+        }
+        .padding(.horizontal)
+    }
+    
+    // MARK: - Loading View
+    private var loadingView: some View {
+        VStack {
+            ProgressView("Loading notes...")
+            Spacer()
+        }
+    }
+    
+    // MARK: - Error View
+    private func errorView(error: String) -> some View {
+        VStack {
+            Text("Error: \(error)")
+                .foregroundColor(.red)
+                .padding()
+            Spacer()
+        }
+    }
+    
+    // MARK: - Empty State View
+    private var emptyStateView: some View {
+        VStack(spacing: 0) {
+            Spacer()
             
-            ZStack{
-                // Fixed bottom navigation bar
-                HStack {
-                    VStack(spacing: 4) {
-                        Image(systemName: "house.fill")
-                            .font(.system(size: 24))
-                            .foregroundColor(Color("snPurple"))
-                        Text("Home")
-                            .font(.system(size: 12, weight: .medium))
-                            .foregroundColor(Color("snPurple"))
+            Image("Journey_Illustration")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .padding(.horizontal, 40)
+            
+            Spacer().frame(height: 30)
+            
+            Text("Start Your Journey")
+                .font(.system(size: 28, weight: .bold))
+                .foregroundColor(.primary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 40)
+            
+            Spacer().frame(height: 20)
+            
+            emptyStateDescription
+            
+            Image("Arrow")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .padding(.horizontal, 80)
+                .padding(.top, 40)
+            
+            Spacer()
+        }
+        .padding(.bottom, 80)
+    }
+    
+    private var emptyStateDescription: some View {
+        VStack(spacing: 8) {
+            Text("Every big step starts with a small step.")
+            Text("Note your first idea and start")
+            Text("your journey!")
+        }
+        .font(.system(size: 16))
+        .foregroundColor(.secondary)
+        .multilineTextAlignment(.center)
+    }
+    
+    // MARK: - Notes List View
+    private var notesListView: some View {
+        ScrollView {
+            VStack(spacing: 0) {
+                headerView
+                searchBarView
+                notesGridView
+            }
+            .padding(.bottom, 120)
+        }
+        .overlay(topOverlay, alignment: .top)
+    }
+    
+    private var headerView: some View {
+        HStack {
+            Text("My Notes")
+                .font(.system(size: 32, weight: .bold))
+                .foregroundColor(.primary)
+            Spacer()
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, 20)
+    }
+    
+    private var searchBarView: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "magnifyingglass")
+                .foregroundColor(.gray)
+            TextField("Search...", text: $searchText)
+                .textFieldStyle(PlainTextFieldStyle())
+                .padding(10)
+                .background(Color(.systemGray6))
+                .cornerRadius(10)
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, 10)
+    }
+    
+    private var notesGridView: some View {
+        let columns = [
+            GridItem(.flexible(), spacing: 12),
+            GridItem(.flexible(), spacing: 12)
+        ]
+        
+        return LazyVGrid(columns: columns, spacing: 12) {
+            ForEach(filteredNotes) { note in
+                NoteRowView(note: note)
+                    .onTapGesture {
+                        path.append(NoteRoute.edit(note.id))
                     }
-                    
-                    Spacer()
-                    
-                    VStack(spacing: 4) {
-                        Image(systemName: "gearshape")
-                            .font(.system(size: 24))
-                            .foregroundColor(.gray)
-                        Text("Settings")
-                            .font(.system(size: 12, weight: .medium))
-                            .foregroundColor(.gray)
-                    }
-                }
-                .padding(.horizontal, 50)
-                .frame(height: 70)
-                .background(Color("downBar")
-                .ignoresSafeArea(edges: .bottom))
-                .overlay(Divider(), alignment: .top)
-                
-                // Fixed floating action button
-                Button(action: {
-                    // Add note action
-                }) {
-                    Image(systemName: "plus")
-                }
-                .buttonStyle(circleButtonStyle())
-                .padding(.bottom, 70) // Position above bottom bar
             }
         }
-        .edgesIgnoringSafeArea(.bottom)
-        .onAppear {
-            if viewModel.notes.isEmpty, let token = TokenManager.shared.getAccessToken() {
-                viewModel.loadNotes(token: token)
-            }
+        .padding(.horizontal, 20)
+        .padding(.top, 20)
+    }
+    
+    private var filteredNotes: [Note] {
+        viewModel.notes.filter { note in
+            searchText.isEmpty ||
+            note.title.localizedCaseInsensitiveContains(searchText) ||
+            note.description.localizedCaseInsensitiveContains(searchText)
         }
+    }
+    
+    private var topOverlay: some View {
+        Rectangle()
+            .fill(Color.white)
+            .frame(height: 70)
+            .ignoresSafeArea(edges: .top)
+    }
+    
+    // MARK: - Bottom Navigation View
+    private var bottomNavigationView: some View {
+        ZStack {
+            bottomTabBar
+            floatingActionButton
+        }
+    }
+    
+    private var bottomTabBar: some View {
+        HStack {
+            tabBarItem(
+                icon: "house.fill",
+                title: "Home",
+                color: Color("snPurple")
+            )
+            
+            Spacer()
+            
+            tabBarItem(
+                icon: "gearshape",
+                title: "Settings",
+                color: .gray
+            )
+        }
+        .padding(.horizontal, 50)
+        .frame(height: 70)
+        .background(
+            Color("downBar")
+                .ignoresSafeArea(edges: .bottom)
+        )
+        .overlay(Divider(), alignment: .top)
+    }
+    
+    private func tabBarItem(icon: String, title: String, color: Color) -> some View {
+        VStack(spacing: 4) {
+            Image(systemName: icon)
+                .font(.system(size: 24))
+                .foregroundColor(color)
+            Text(title)
+                .font(.system(size: 12, weight: .medium))
+                .foregroundColor(color)
+        }
+    }
+    
+    private var floatingActionButton: some View {
+        Button(action: {
+            path.append(NoteRoute.create)
+        }) {
+            Image(systemName: "plus")
+        }
+        .buttonStyle(circleButtonStyle())
+        .padding(.bottom, 70)
+    }
+    
+    // MARK: - Navigation
+    @ViewBuilder
+    private func navigationDestination(for route: NoteRoute) -> some View {
+        switch route {
+        case .edit(let id):
+            if let index = viewModel.notes.firstIndex(where: { $0.id == id }) {
+                NoteEditorView(
+                    note: $viewModel.notes[index],
+                    path: $path,
+                    onDelete: {
+                        viewModel.delete(note: viewModel.notes[index])
+                    },
+                    onSave: { updatedNote in
+                        viewModel.update(note: updatedNote)
+                    }
+                )
+            }
+        case .create:
+            // Add your create view here
+            EmptyView()
+        }
+    }
+    
+    // MARK: - Helper Methods
+    private func loadNotesIfNeeded() {
+        viewModel.fetchNotes()
     }
 }
 
 // MARK: - Note Row View
-
 struct NoteRowView: View {
     let note: Note
 
@@ -172,12 +274,12 @@ struct NoteRowView: View {
                 .lineLimit(2)
                 .truncationMode(.tail)
                 .padding(.vertical)
+            
             Text(note.description)
                 .font(.system(size: 14))
                 .foregroundColor(.secondary)
                 .lineLimit(7)
                 .truncationMode(.tail)
-
         }
         .padding(.horizontal)
         .frame(width: 160, height: 200, alignment: .top)
@@ -200,7 +302,6 @@ struct NoteRowView: View {
 }
 
 // MARK: - Circle Button Style
-
 struct circleButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -218,7 +319,6 @@ struct circleButtonStyle: ButtonStyle {
             .scaleEffect(configuration.isPressed ? 1.1 : 1.0)
     }
 }
-
 
 #Preview {
     NotesListView()
