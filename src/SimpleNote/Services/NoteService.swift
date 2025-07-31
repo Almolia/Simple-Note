@@ -80,4 +80,40 @@ class NoteService {
             }
             .eraseToAnyPublisher()
     }
+    
+    func createNote(title: String, description: String, token: String) -> AnyPublisher<Note, Error> {
+        let url = baseURL.appendingPathComponent("notes/")
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let body = ["title": title, "description": description]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+
+        let decoder = JSONDecoder()
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        decoder.dateDecodingStrategy = .custom { decoder in
+            let container = try decoder.singleValueContainer()
+            let dateString = try container.decode(String.self)
+            if let date = formatter.date(from: dateString) {
+                return date
+            }
+            throw DecodingError.dataCorruptedError(in: container,
+                                                   debugDescription: "Invalid date format: \(dateString)")
+        }
+
+        return URLSession.shared.dataTaskPublisher(for: request)
+            .tryMap { output in
+                guard let response = output.response as? HTTPURLResponse,
+                      (200...299).contains(response.statusCode)
+                else {
+                    throw URLError(.badServerResponse)
+                }
+                return output.data
+            }
+            .decode(type: Note.self, decoder: decoder)
+            .eraseToAnyPublisher()
+    }
 }

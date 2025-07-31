@@ -44,15 +44,13 @@ class NotesViewModel: ObservableObject {
             })
             .store(in: &cancellables)
     }
-
+    
     // Update a note in both backend and local list
     func update(note: Note) {
         guard let existing = notes.first(where: { $0.id == note.id }) else { return }
         guard existing.title != note.title || existing.description != note.description else { return }
         isUpdating = true
-        errorMessage = nil
-        print("We Update it")
-
+        errorMessage = nil        
         
         NoteService.shared.updateNote(note, token: token)
             .receive(on: DispatchQueue.main)
@@ -73,7 +71,7 @@ class NotesViewModel: ObservableObject {
     func delete(note: Note) {
         isUpdating = true
         errorMessage = nil
-
+        
         NoteService.shared.deleteNote(withId: note.id, token: token)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
@@ -83,6 +81,23 @@ class NotesViewModel: ObservableObject {
                 }
             }, receiveValue: {
                 self.notes.removeAll { $0.id == note.id }
+            })
+            .store(in: &cancellables)
+    }
+    
+    func create(title: String, description: String) {
+        isUpdating = true
+        errorMessage = nil
+        
+        NoteService.shared.createNote(title: title, description: description, token: token)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                self.isUpdating = false
+                if case .failure(let error) = completion {
+                    self.errorMessage = "Create failed: \(error.localizedDescription)"
+                }
+            }, receiveValue: { newNote in
+                self.fetchNotes()
             })
             .store(in: &cancellables)
     }

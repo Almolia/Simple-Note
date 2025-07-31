@@ -5,6 +5,7 @@ enum NoteRoute: Hashable {
     case create
 }
 
+
 struct NotesListView: View {
     @StateObject private var viewModel = NotesViewModel(token: TokenManager.shared.getAccessToken() ?? "")
     @State private var searchText: String = ""
@@ -240,19 +241,27 @@ struct NotesListView: View {
         case .edit(let id):
             if let index = viewModel.notes.firstIndex(where: { $0.id == id }) {
                 NoteEditorView(
-                    note: $viewModel.notes[index],
+                    mode: .edit(viewModel.notes[index]),
                     path: $path,
                     onDelete: {
                         viewModel.delete(note: viewModel.notes[index])
                     },
                     onSave: { updatedNote in
                         viewModel.update(note: updatedNote)
-                    }
+                    },
+                    onSaveCreate: { _, _ in }
                 )
             }
         case .create:
-            // Add your create view here
-            EmptyView()
+            NoteEditorView(
+                mode: .create,
+                path: $path,
+                onDelete: {},
+                onSave: { _ in },
+                onSaveCreate: { title, description in
+                    viewModel.create(title: title, description: description)
+                }
+            )
         }
     }
     
