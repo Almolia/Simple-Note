@@ -62,4 +62,34 @@ class AuthService {
             }
             .eraseToAnyPublisher()
     }
+    
+    func changePassword(oldPassword: String, newPassword: String, token: String) -> AnyPublisher<Void, Error> {
+        let url = baseURL.appendingPathComponent("auth/change-password/")
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        // Add Authorization header if needed (assuming token is stored in UserDefaults)
+        if let token = UserDefaults.standard.string(forKey: "token") {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+        
+        let body = [
+            "old_password": oldPassword,
+            "new_password": newPassword
+        ]
+        
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+        
+        return URLSession.shared.dataTaskPublisher(for: request)
+            .tryMap { output in
+                guard let response = output.response as? HTTPURLResponse,
+                      (200...299).contains(response.statusCode) else {
+                    throw URLError(.badServerResponse)
+                }
+                return ()
+            }
+            .eraseToAnyPublisher()
+    }
 }

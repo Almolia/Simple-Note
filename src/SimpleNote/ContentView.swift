@@ -8,16 +8,9 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var isAuthenticated = false
     
     var body: some View {
-        if isAuthenticated {
-            // Main app navigation stack
-            NotesListView()
-        } else {
-            // Authentication navigation stack
-            IntroView()
-        }
+        IntroView()
     }
 }
 

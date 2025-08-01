@@ -3,8 +3,7 @@ import SwiftUI
 struct SignupView: View {
     @Binding var path: NavigationPath
 
-    @StateObject private var viewModel = AuthViewModel()
-
+    @StateObject private var authViewModel = AuthViewModel(token: TokenManager.shared.getAccessToken() ?? "")
     
     @State private var username: String = ""
     @State private var email: String = ""
@@ -32,7 +31,7 @@ struct SignupView: View {
                 
                 VStack(alignment: .leading, spacing: 30) {
                     Spacer()
-
+                    
                     VStack(alignment: .leading, spacing: 4) {
                         Text("First Name")
                         TextField("Example: Taha", text: $firstName)
@@ -70,19 +69,19 @@ struct SignupView: View {
                     }
                 }
                 
-                Text(viewModel.errorMessage ?? " ")
+                Text(authViewModel.message ?? " ")
                     .foregroundColor(.red)
                     .multilineTextAlignment(.center)
                     .frame(minHeight: 20) // Reserve minimum height
-                    .opacity(viewModel.errorMessage != nil ? 1.0 : 0.0)
+                    .opacity(authViewModel.message != nil ? 1.0 : 0.0)
                 
                 Button(action: {
                     guard password == confirmPassword else {
-                        viewModel.errorMessage = "Passwords do not match"
+                        authViewModel.message = "Passwords do not match"
                         return
                     }
                     
-                    viewModel.signup(
+                    authViewModel.signup(
                         username: username,
                         email: email,
                         password: password,
@@ -90,12 +89,12 @@ struct SignupView: View {
                         lastName: lastName.isEmpty ? nil : lastName
                     ) { success in
                         if success {
-                            path.append(Route.notes)
+                            path.append(Routes.notes)
                         }
                     }
                 }) {
                     HStack {
-                        if viewModel.isLoading {
+                        if authViewModel.isLoading {
                             Spacer()
                             ProgressView()
                             Spacer()
@@ -116,7 +115,7 @@ struct SignupView: View {
                     .background(formIsValid ? Color("snPurple") : Color.gray)
                     .cornerRadius(25)
                 }
-                .disabled(!formIsValid || viewModel.isLoading)
+                .disabled(!formIsValid || authViewModel.isLoading)
                 
                 Button(action: {
                     path.removeLast()
@@ -126,25 +125,10 @@ struct SignupView: View {
                         .foregroundColor(Color("snPurple"))
                 }
                 .padding(.bottom)
-                .navigationBarBackButtonHidden(true)
-                
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        path.removeLast()
-                    }) {
-                        Image(systemName: "chevron.backward")
-                        Text("Back to Login")
-                    }
-                    .foregroundColor(.blue)
-                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, 20.0)
             .padding(.top, 40)
-            .navigationBarBackButtonHidden(true)
-            
         }
     }
     
@@ -152,8 +136,6 @@ struct SignupView: View {
         !username.isEmpty && !email.isEmpty && !password.isEmpty && password == confirmPassword
     }
 }
-
-
 
 #Preview {
     StatefulPreviewWrapper(NavigationPath()) { path in

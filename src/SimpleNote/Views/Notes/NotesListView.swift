@@ -1,44 +1,33 @@
 import SwiftUI
 
-enum NoteRoute: Hashable {
-    case edit(Int)
-    case create
-}
-
-
 struct NotesListView: View {
-    @StateObject private var viewModel = NotesViewModel(token: TokenManager.shared.getAccessToken() ?? "")
-    @State private var searchText: String = ""
-    @State private var path = NavigationPath()
+    @StateObject private var notesViewModel = NotesViewModel(token: TokenManager.shared.getAccessToken() ?? "")
     
+    @State private var searchText: String = ""
+    @Binding var path: NavigationPath
+
     var body: some View {
-        NavigationStack(path: $path) {
-            ZStack(alignment: .bottom) {
-                mainContentView
-                bottomNavigationView
-            }
-            .edgesIgnoringSafeArea(.bottom)
-            .navigationDestination(for: NoteRoute.self) { route in
-                navigationDestination(for: route)
-            }
-            .onAppear {
-                loadNotesIfNeeded()
-            }
-            .onChange(of: path) {
-                print(path)
-            }
+        ZStack(alignment: .bottom) {
+            mainContentView
+            bottomNavigationView
         }
+        .edgesIgnoringSafeArea(.bottom)
+        .onAppear {
+            loadNotesIfNeeded()
+        }
+        .navigationBarBackButtonHidden(true)
+
     }
     
     // MARK: - Main Content View
     @ViewBuilder
     private var mainContentView: some View {
         VStack(spacing: 0) {
-            if viewModel.isLoading {
+            if notesViewModel.isLoading {
                 loadingView
-            } else if let error = viewModel.errorMessage {
+            } else if let error = notesViewModel.errorMessage {
                 errorView(error: error)
-            } else if viewModel.notes.isEmpty {
+            } else if notesViewModel.notes.isEmpty {
                 emptyStateView
             } else {
                 notesListView
@@ -157,7 +146,7 @@ struct NotesListView: View {
             ForEach(filteredNotes) { note in
                 NoteRowView(note: note)
                     .onTapGesture {
-                        path.append(NoteRoute.edit(note.id))
+                        path.append(Routes.edit(note.id))
                     }
             }
         }
@@ -166,7 +155,7 @@ struct NotesListView: View {
     }
     
     private var filteredNotes: [Note] {
-        viewModel.notes.filter { note in
+        notesViewModel.notes.filter { note in
             searchText.isEmpty ||
             note.title.localizedCaseInsensitiveContains(searchText) ||
             note.description.localizedCaseInsensitiveContains(searchText)
@@ -198,11 +187,15 @@ struct NotesListView: View {
             
             Spacer()
             
-            tabBarItem(
-                icon: "gearshape",
-                title: "Settings",
-                color: .gray
-            )
+            Button {
+                path.append(Routes.profile)
+            } label: {
+                tabBarItem(
+                    icon: "gearshape",
+                    title: "Settings",
+                    color: .gray
+                )
+            }
         }
         .padding(.horizontal, 50)
         .frame(height: 70)
@@ -226,48 +219,17 @@ struct NotesListView: View {
     
     private var floatingActionButton: some View {
         Button(action: {
-            path.append(NoteRoute.create)
+            path.append(Routes.create)
         }) {
             Image(systemName: "plus")
         }
         .buttonStyle(circleButtonStyle())
         .padding(.bottom, 70)
     }
-    
-    // MARK: - Navigation
-    @ViewBuilder
-    private func navigationDestination(for route: NoteRoute) -> some View {
-        switch route {
-        case .edit(let id):
-            if let index = viewModel.notes.firstIndex(where: { $0.id == id }) {
-                NoteEditorView(
-                    mode: .edit(viewModel.notes[index]),
-                    path: $path,
-                    onDelete: {
-                        viewModel.delete(note: viewModel.notes[index])
-                    },
-                    onSave: { updatedNote in
-                        viewModel.update(note: updatedNote)
-                    },
-                    onSaveCreate: { _, _ in }
-                )
-            }
-        case .create:
-            NoteEditorView(
-                mode: .create,
-                path: $path,
-                onDelete: {},
-                onSave: { _ in },
-                onSaveCreate: { title, description in
-                    viewModel.create(title: title, description: description)
-                }
-            )
-        }
-    }
-    
+        
     // MARK: - Helper Methods
     private func loadNotesIfNeeded() {
-        viewModel.fetchNotes()
+        notesViewModel.fetchNotes()
     }
 }
 
@@ -330,5 +292,7 @@ struct circleButtonStyle: ButtonStyle {
 }
 
 #Preview {
-    NotesListView()
+    StatefulPreviewWrapper(NavigationPath()) { path in
+        NotesListView(path: path)
+    }
 }

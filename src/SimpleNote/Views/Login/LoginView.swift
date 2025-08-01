@@ -1,15 +1,19 @@
 import SwiftUI
 
 struct LoginView: View {
-    @StateObject private var viewModel = AuthViewModel()
     @Binding var path: NavigationPath
+    
+    @StateObject private var authViewModel = AuthViewModel(token: TokenManager.shared.getAccessToken() ?? "")
+
     @State private var username: String = ""
     @State private var password: String = ""
     @State private var showNotesStack = false
     
     var body: some View {
         VStack(spacing: 20) {
+            
             Spacer()
+            
             HStack(alignment: .firstTextBaseline) {
                 VStack(alignment: .leading, spacing: 10) {
                     Text("Let's Login")
@@ -36,18 +40,21 @@ struct LoginView: View {
                     .textFieldStyle(MyTextFieldStyle())
             }
             
-            Text(viewModel.errorMessage ?? " ")
+            Text(authViewModel.message ?? " ")
                 .foregroundColor(.red)
                 .multilineTextAlignment(.center)
                 .frame(minHeight: 20)
-                .opacity(viewModel.errorMessage != nil ? 1.0 : 0.0)
+                .opacity(authViewModel.message != nil ? 1.0 : 0.0)
             
             Button(action: {
-                viewModel.login(username: username, password: password)
+                authViewModel.login(username: username, password: password) { success in
+                    if success {
+                        path.append(Routes.notes)
+                    }
+                }
             }) {
                 HStack {
-                    
-                    if viewModel.isLoading {
+                    if authViewModel.isLoading {
                         Spacer()
                         ProgressView()
                         Spacer()
@@ -69,7 +76,7 @@ struct LoginView: View {
                 .background(formIsValid ? Color("snPurple") : Color.gray)
                 .cornerRadius(25)
             }
-            .disabled(!formIsValid || viewModel.isLoading)
+            .disabled(!formIsValid || authViewModel.isLoading)
             
             HStack {
                 Rectangle()
@@ -90,23 +97,13 @@ struct LoginView: View {
             
             
             Button("Don't have any account? Register here") {
-                path.append(Route.signup)
+                path.append(Routes.signup)
             }
             Spacer()
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding([.top, .leading, .trailing], 30)
         .navigationBarBackButtonHidden(true)
-        .onChange(of: viewModel.isAuthenticated) {
-            if viewModel.isAuthenticated {
-                showNotesStack = true
-            }
-        }
-        .fullScreenCover(isPresented: $showNotesStack) {
-            NavigationStack {
-                NotesListView()
-            }
-        }
     }
     
     private var formIsValid: Bool {

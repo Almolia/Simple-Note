@@ -4,25 +4,33 @@ import Combine
 class AuthViewModel: ObservableObject {
     @Published var isAuthenticated: Bool = false
     @Published var isLoading: Bool = false
-    @Published var errorMessage: String?
+    @Published var message: String?
     
     private var cancellables = Set<AnyCancellable>()
+    private let token: String
+
+    
+    init(token: String) {
+        self.token = token
+    }
     
     // MARK: - Login
-    func login(username: String, password: String) {
+    func login(username: String, password: String, completion: @escaping (Bool) -> Void) {
         isLoading = true
-        errorMessage = nil
+        message = nil
         
         AuthService.shared.login(username: username, password: password)
             .receive(on: DispatchQueue.main)
-            .sink { completion in
+            .sink { completionSink in
                 self.isLoading = false
-                if case let .failure(error) = completion {
-                    self.errorMessage = error.localizedDescription
+                if case let .failure(error) = completionSink {
+                    self.message = error.localizedDescription
+                    completion(false)
                 }
             } receiveValue: { tokenResponse in
                 TokenManager.shared.saveTokens(tokenResponse)
                 self.isAuthenticated = true
+                completion(true)
             }
             .store(in: &cancellables)
     }
@@ -37,7 +45,7 @@ class AuthViewModel: ObservableObject {
         completion: @escaping (Bool) -> Void
     ) {
         isLoading = true
-        errorMessage = nil
+        message = nil
         
         AuthService.shared.signup(
             username: username,
@@ -50,12 +58,33 @@ class AuthViewModel: ObservableObject {
         .sink { completionSink in
             self.isLoading = false
             if case let .failure(error) = completionSink {
-                self.errorMessage = error.localizedDescription
+                self.message = error.localizedDescription
                 completion(false)
             }
         } receiveValue: { _ in
-            completion(true)
+            // Automatically login after successful signup
+            self.login(username: username, password: password, completion: completion)
         }
         .store(in: &cancellables)
+    }
+    
+    func changePassword(oldPassword: String, newPassword: String, completion: @escaping (Bool) -> Void) {
+        isLoading = true
+        message = nil
+
+        AuthService.shared.changePassword(oldPassword: oldPassword, newPassword: newPassword, token: token)
+            .receive(on: DispatchQueue.main)
+            .sink { completionSink in
+                self.isLoading = false
+                if case let .failure(error) = completionSink {
+                    self.message = error.localizedDescription
+                    completion(false)
+                }
+            } receiveValue: { _ in
+                self.message = "Password Changed Successfully!"
+                completion(true)
+
+            }
+            .store(in: &cancellables)
     }
 }
