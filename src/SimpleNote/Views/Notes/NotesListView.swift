@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 
 struct NotesListView: View {
-    @ObservedObject var notesViewModel: NotesViewModel
+    @EnvironmentObject var notesViewModel: NotesViewModel
     @Binding var path: NavigationPath
     
     @Query(sort: \Note.updated_at, order: .reverse) private var notes: [Note]

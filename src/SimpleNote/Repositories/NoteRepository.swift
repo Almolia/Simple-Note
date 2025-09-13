@@ -6,12 +6,21 @@ import Combine
 class NoteRepository {
     
     private let modelContext: ModelContext
-    
     private let noteService: NoteService
     
     init(modelContext: ModelContext) {
         self.modelContext = modelContext
         self.noteService = NoteService.shared
+    }
+    
+    // MARK: - Helper for Saving Context
+    
+    private func saveContext() {
+        do {
+            try modelContext.save()
+        } catch {
+            print("Failed to save model context: \(error.localizedDescription)")
+        }
     }
     
     // MARK: - Core Data Operations
@@ -47,6 +56,8 @@ class NoteRepository {
                 modelContext.delete(localNote)
             }
             
+            saveContext()
+            
         } catch {
             print("Failed to sync notes from server: \(error.localizedDescription)")
         }
@@ -64,15 +75,19 @@ class NoteRepository {
         
         modelContext.insert(newNote)
         
+        saveContext()
+        
         do {
             let createdRemoteNote = try await noteService.createNote(title: title, content: content).async()
             newNote.id = createdRemoteNote.id
+            saveContext()
         } catch {
             print("Failed to create note on server: \(error.localizedDescription)")
         }
     }
     
     func updateNote(_ note: Note) async {
+        saveContext()
         
         do {
             try await noteService.updateNote(note).async()
@@ -86,6 +101,8 @@ class NoteRepository {
         
         modelContext.delete(note)
         
+        saveContext()
+        
         guard noteID > 0 else { return }
         
         do {
@@ -95,7 +112,6 @@ class NoteRepository {
         }
     }
 }
-
 
 extension AnyPublisher {
     func async() async throws -> Output {

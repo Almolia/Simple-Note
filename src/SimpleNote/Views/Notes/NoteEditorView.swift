@@ -6,7 +6,7 @@ enum EditorMode {
 }
 
 struct NoteEditorView: View {
-    @ObservedObject var viewModel: NotesViewModel
+    @EnvironmentObject var viewModel: NotesViewModel
     
     var mode: EditorMode
     @Binding var path: NavigationPath
@@ -17,10 +17,9 @@ struct NoteEditorView: View {
     @State private var shouldSave = true
     @Environment(\.dismiss) private var dismiss
     
-    init(mode: EditorMode, path: Binding<NavigationPath>, viewModel: NotesViewModel) {
+    init(mode: EditorMode, path: Binding<NavigationPath>) {
         self.mode = mode
         _path = path
-        self.viewModel = viewModel
         
         switch mode {
         case .create:
