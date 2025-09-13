@@ -2,7 +2,7 @@ import SwiftUI
 
 struct ChangePasswordView: View {
     @Binding var path: NavigationPath
-    @StateObject private var authViewModel = AuthViewModel(token: TokenManager.shared.getAccessToken() ?? "")
+    @EnvironmentObject var authViewModel: AuthViewModel
     
     @State private var oldPassword: String = ""
     @State private var newPassword: String = ""
@@ -108,11 +108,5 @@ struct ChangePasswordView: View {
     
     private var formIsValid: Bool {
         !oldPassword.isEmpty && !newPassword.isEmpty && newPassword == confirmPassword
-    }
-}
-
-#Preview {
-    StatefulPreviewWrapper(NavigationPath()) { path in
-        ChangePasswordView(path: path)
     }
 }

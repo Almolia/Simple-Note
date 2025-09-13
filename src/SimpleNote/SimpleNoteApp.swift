@@ -1,11 +1,5 @@
-//
-//  SimpleNoteApp.swift
-//  SimpleNote
-//
-//  Created by Ali M.Sh on 4/19/1404 AP.
-//
-
 import SwiftUI
+import SwiftData
 
 @main
 struct SimpleNoteApp: App {
@@ -13,5 +7,7 @@ struct SimpleNoteApp: App {
         WindowGroup {
             ContentView()
         }
+        .modelContainer(for: Note.self)
+        
     }
 }

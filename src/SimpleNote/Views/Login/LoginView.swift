@@ -1,10 +1,9 @@
 import SwiftUI
 
 struct LoginView: View {
+    @EnvironmentObject var authViewModel: AuthViewModel
     @Binding var path: NavigationPath
     
-    @StateObject private var authViewModel = AuthViewModel(token: TokenManager.shared.getAccessToken() ?? "")
-
     @State private var username: String = ""
     @State private var password: String = ""
     @State private var showNotesStack = false
@@ -104,15 +103,12 @@ struct LoginView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding([.top, .leading, .trailing], 30)
         .navigationBarBackButtonHidden(true)
+        .onAppear {
+                    authViewModel.message = nil
+                }
     }
     
     private var formIsValid: Bool {
         !username.isEmpty && !password.isEmpty
-    }
-}
-
-#Preview {
-    StatefulPreviewWrapper(NavigationPath()) { path in
-        LoginView(path: path)
     }
 }

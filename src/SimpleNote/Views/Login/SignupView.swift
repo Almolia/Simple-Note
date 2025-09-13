@@ -1,9 +1,8 @@
 import SwiftUI
 
 struct SignupView: View {
+    @EnvironmentObject var authViewModel: AuthViewModel
     @Binding var path: NavigationPath
-
-    @StateObject private var authViewModel = AuthViewModel(token: TokenManager.shared.getAccessToken() ?? "")
     
     @State private var username: String = ""
     @State private var email: String = ""
@@ -134,11 +133,5 @@ struct SignupView: View {
     
     private var formIsValid: Bool {
         !username.isEmpty && !email.isEmpty && !password.isEmpty && password == confirmPassword
-    }
-}
-
-#Preview {
-    StatefulPreviewWrapper(NavigationPath()) { path in
-        SignupView(path: path)
     }
 }

@@ -6,6 +6,40 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		411218F82E74AAAD000DD102 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 411218F42E74AAAD000DD102 /* Assets.xcassets */; };
+		411218F92E74AAAD000DD102 /* NoteService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411218DD2E74AAAD000DD102 /* NoteService.swift */; };
+		411218FA2E74AAAD000DD102 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411218F52E74AAAD000DD102 /* ContentView.swift */; };
+		411218FB2E74AAAD000DD102 /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411218F02E74AAAD000DD102 /* EmptyStateView.swift */; };
+		411218FC2E74AAAD000DD102 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411218DB2E74AAAD000DD102 /* APIService.swift */; };
+		411218FD2E74AAAD000DD102 /* NoteEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411218D72E74AAAD000DD102 /* NoteEntity.swift */; };
+		411218FE2E74AAAD000DD102 /* NotesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411218EB2E74AAAD000DD102 /* NotesListView.swift */; };
+		411219002E74AAAD000DD102 /* SignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411218E82E74AAAD000DD102 /* SignupView.swift */; };
+		411219012E74AAAD000DD102 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411218D92E74AAAD000DD102 /* Colors.swift */; };
+		411219022E74AAAD000DD102 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411218E32E74AAAD000DD102 /* AuthViewModel.swift */; };
+		411219032E74AAAD000DD102 /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411218CC2E74AAAD000DD102 /* View+Extensions.swift */; };
+		411219042E74AAAD000DD102 /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411218DE2E74AAAD000DD102 /* TokenManager.swift */; };
+		411219052E74AAAD000DD102 /* NoteEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411218EA2E74AAAD000DD102 /* NoteEditorView.swift */; };
+		411219062E74AAAD000DD102 /* LocalDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411218D62E74AAAD000DD102 /* LocalDatabase.swift */; };
+		411219072E74AAAD000DD102 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411218D22E74AAAD000DD102 /* User.swift */; };
+		411219082E74AAAD000DD102 /* PaginationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411218E02E74AAAD000DD102 /* PaginationHelper.swift */; };
+		411219092E74AAAD000DD102 /* IntroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411218E62E74AAAD000DD102 /* IntroView.swift */; };
+		4112190A2E74AAAD000DD102 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411218CF2E74AAAD000DD102 /* Note.swift */; };
+		4112190B2E74AAAD000DD102 /* AuthToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411218CE2E74AAAD000DD102 /* AuthToken.swift */; };
+		4112190C2E74AAAD000DD102 /* TokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411218D12E74AAAD000DD102 /* TokenResponse.swift */; };
+		4112190D2E74AAAD000DD102 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411218DC2E74AAAD000DD102 /* AuthService.swift */; };
+		4112190E2E74AAAD000DD102 /* SimpleNoteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411218F62E74AAAD000DD102 /* SimpleNoteApp.swift */; };
+		4112190F2E74AAAD000DD102 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411218E72E74AAAD000DD102 /* LoginView.swift */; };
+		411219102E74AAAD000DD102 /* PreviewHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411218E12E74AAAD000DD102 /* PreviewHelpers.swift */; };
+		411219112E74AAAD000DD102 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411218EE2E74AAAD000DD102 /* ProfileView.swift */; };
+		411219122E74AAAD000DD102 /* NotesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411218E42E74AAAD000DD102 /* NotesViewModel.swift */; };
+		411219132E74AAAD000DD102 /* Date+Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411218CB2E74AAAD000DD102 /* Date+Format.swift */; };
+		411219142E74AAAD000DD102 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411218D42E74AAAD000DD102 /* NetworkError.swift */; };
+		411219152E74AAAD000DD102 /* ChangePasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411218ED2E74AAAD000DD102 /* ChangePasswordView.swift */; };
+		411219162E74AAAD000DD102 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411218F12E74AAAD000DD102 /* LoadingView.swift */; };
+		4112191B2E74AD64000DD102 /* RemoteNote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4112191A2E74AD64000DD102 /* RemoteNote.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		4171A8622E203B5B0072A6EA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,15 +58,46 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		411218CB2E74AAAD000DD102 /* Date+Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Format.swift"; sourceTree = "<group>"; };
+		411218CC2E74AAAD000DD102 /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
+		411218CE2E74AAAD000DD102 /* AuthToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthToken.swift; sourceTree = "<group>"; };
+		411218CF2E74AAAD000DD102 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
+		411218D12E74AAAD000DD102 /* TokenResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenResponse.swift; sourceTree = "<group>"; };
+		411218D22E74AAAD000DD102 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		411218D42E74AAAD000DD102 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
+		411218D62E74AAAD000DD102 /* LocalDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDatabase.swift; sourceTree = "<group>"; };
+		411218D72E74AAAD000DD102 /* NoteEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteEntity.swift; sourceTree = "<group>"; };
+		411218D92E74AAAD000DD102 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		411218DB2E74AAAD000DD102 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		411218DC2E74AAAD000DD102 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		411218DD2E74AAAD000DD102 /* NoteService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteService.swift; sourceTree = "<group>"; };
+		411218DE2E74AAAD000DD102 /* TokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManager.swift; sourceTree = "<group>"; };
+		411218E02E74AAAD000DD102 /* PaginationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginationHelper.swift; sourceTree = "<group>"; };
+		411218E12E74AAAD000DD102 /* PreviewHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewHelpers.swift; sourceTree = "<group>"; };
+		411218E32E74AAAD000DD102 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
+		411218E42E74AAAD000DD102 /* NotesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewModel.swift; sourceTree = "<group>"; };
+		411218E62E74AAAD000DD102 /* IntroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroView.swift; sourceTree = "<group>"; };
+		411218E72E74AAAD000DD102 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		411218E82E74AAAD000DD102 /* SignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupView.swift; sourceTree = "<group>"; };
+		411218EA2E74AAAD000DD102 /* NoteEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteEditorView.swift; sourceTree = "<group>"; };
+		411218EB2E74AAAD000DD102 /* NotesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesListView.swift; sourceTree = "<group>"; };
+		411218ED2E74AAAD000DD102 /* ChangePasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordView.swift; sourceTree = "<group>"; };
+		411218EE2E74AAAD000DD102 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		411218F02E74AAAD000DD102 /* EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateView.swift; sourceTree = "<group>"; };
+		411218F12E74AAAD000DD102 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		411218F42E74AAAD000DD102 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		411218F52E74AAAD000DD102 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		411218F62E74AAAD000DD102 /* SimpleNoteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleNoteApp.swift; sourceTree = "<group>"; };
+		4112191A2E74AD64000DD102 /* RemoteNote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteNote.swift; sourceTree = "<group>"; };
 		4171A8542E203B590072A6EA /* SimpleNote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleNote.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4171A8612E203B5B0072A6EA /* SimpleNoteTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SimpleNoteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4171A86B2E203B5B0072A6EA /* SimpleNoteUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SimpleNoteUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		4171A8562E203B590072A6EA /* SimpleNote */ = {
+		411219172E74AAC5000DD102 /* Repositories */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = SimpleNote;
+			path = Repositories;
 			sourceTree = "<group>";
 		};
 		4171A8642E203B5B0072A6EA /* SimpleNoteTests */ = {
@@ -72,10 +137,153 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		411218CD2E74AAAD000DD102 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				411218CB2E74AAAD000DD102 /* Date+Format.swift */,
+				411218CC2E74AAAD000DD102 /* View+Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		411218D32E74AAAD000DD102 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				411218CE2E74AAAD000DD102 /* AuthToken.swift */,
+				411218CF2E74AAAD000DD102 /* Note.swift */,
+				411218D12E74AAAD000DD102 /* TokenResponse.swift */,
+				411218D22E74AAAD000DD102 /* User.swift */,
+				4112191A2E74AD64000DD102 /* RemoteNote.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		411218D52E74AAAD000DD102 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				411218D42E74AAAD000DD102 /* NetworkError.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		411218D82E74AAAD000DD102 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				411218D62E74AAAD000DD102 /* LocalDatabase.swift */,
+				411218D72E74AAAD000DD102 /* NoteEntity.swift */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
+		411218DA2E74AAAD000DD102 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				411218D92E74AAAD000DD102 /* Colors.swift */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		411218DF2E74AAAD000DD102 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				411218DB2E74AAAD000DD102 /* APIService.swift */,
+				411218DC2E74AAAD000DD102 /* AuthService.swift */,
+				411218DD2E74AAAD000DD102 /* NoteService.swift */,
+				411218DE2E74AAAD000DD102 /* TokenManager.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		411218E22E74AAAD000DD102 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				411218E02E74AAAD000DD102 /* PaginationHelper.swift */,
+				411218E12E74AAAD000DD102 /* PreviewHelpers.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		411218E52E74AAAD000DD102 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				411218E32E74AAAD000DD102 /* AuthViewModel.swift */,
+				411218E42E74AAAD000DD102 /* NotesViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		411218E92E74AAAD000DD102 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				411218E62E74AAAD000DD102 /* IntroView.swift */,
+				411218E72E74AAAD000DD102 /* LoginView.swift */,
+				411218E82E74AAAD000DD102 /* SignupView.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		411218EC2E74AAAD000DD102 /* Notes */ = {
+			isa = PBXGroup;
+			children = (
+				411218EA2E74AAAD000DD102 /* NoteEditorView.swift */,
+				411218EB2E74AAAD000DD102 /* NotesListView.swift */,
+			);
+			path = Notes;
+			sourceTree = "<group>";
+		};
+		411218EF2E74AAAD000DD102 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				411218ED2E74AAAD000DD102 /* ChangePasswordView.swift */,
+				411218EE2E74AAAD000DD102 /* ProfileView.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		411218F22E74AAAD000DD102 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				411218F02E74AAAD000DD102 /* EmptyStateView.swift */,
+				411218F12E74AAAD000DD102 /* LoadingView.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		411218F32E74AAAD000DD102 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				411218E92E74AAAD000DD102 /* Login */,
+				411218EC2E74AAAD000DD102 /* Notes */,
+				411218EF2E74AAAD000DD102 /* Profile */,
+				411218F22E74AAAD000DD102 /* Shared */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		411218F72E74AAAD000DD102 /* SimpleNote */ = {
+			isa = PBXGroup;
+			children = (
+				411219172E74AAC5000DD102 /* Repositories */,
+				411218CD2E74AAAD000DD102 /* Extensions */,
+				411218D32E74AAAD000DD102 /* Models */,
+				411218D52E74AAAD000DD102 /* Networking */,
+				411218D82E74AAAD000DD102 /* Persistence */,
+				411218DA2E74AAAD000DD102 /* Resources */,
+				411218DF2E74AAAD000DD102 /* Services */,
+				411218E22E74AAAD000DD102 /* Utils */,
+				411218E52E74AAAD000DD102 /* ViewModels */,
+				411218F32E74AAAD000DD102 /* Views */,
+				411218F42E74AAAD000DD102 /* Assets.xcassets */,
+				411218F52E74AAAD000DD102 /* ContentView.swift */,
+				411218F62E74AAAD000DD102 /* SimpleNoteApp.swift */,
+			);
+			path = SimpleNote;
+			sourceTree = "<group>";
+		};
 		4171A84B2E203B590072A6EA = {
 			isa = PBXGroup;
 			children = (
-				4171A8562E203B590072A6EA /* SimpleNote */,
+				411218F72E74AAAD000DD102 /* SimpleNote */,
 				4171A8642E203B5B0072A6EA /* SimpleNoteTests */,
 				4171A86E2E203B5B0072A6EA /* SimpleNoteUITests */,
 				4171A8552E203B590072A6EA /* Products */,
@@ -108,7 +316,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				4171A8562E203B590072A6EA /* SimpleNote */,
+				411219172E74AAC5000DD102 /* Repositories */,
 			);
 			name = SimpleNote;
 			packageProductDependencies = (
@@ -212,6 +420,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				411218F82E74AAAD000DD102 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,6 +445,36 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				411218F92E74AAAD000DD102 /* NoteService.swift in Sources */,
+				411218FA2E74AAAD000DD102 /* ContentView.swift in Sources */,
+				411218FB2E74AAAD000DD102 /* EmptyStateView.swift in Sources */,
+				411218FC2E74AAAD000DD102 /* APIService.swift in Sources */,
+				411218FD2E74AAAD000DD102 /* NoteEntity.swift in Sources */,
+				411218FE2E74AAAD000DD102 /* NotesListView.swift in Sources */,
+				411219002E74AAAD000DD102 /* SignupView.swift in Sources */,
+				411219012E74AAAD000DD102 /* Colors.swift in Sources */,
+				411219022E74AAAD000DD102 /* AuthViewModel.swift in Sources */,
+				411219032E74AAAD000DD102 /* View+Extensions.swift in Sources */,
+				411219042E74AAAD000DD102 /* TokenManager.swift in Sources */,
+				411219052E74AAAD000DD102 /* NoteEditorView.swift in Sources */,
+				4112191B2E74AD64000DD102 /* RemoteNote.swift in Sources */,
+				411219062E74AAAD000DD102 /* LocalDatabase.swift in Sources */,
+				411219072E74AAAD000DD102 /* User.swift in Sources */,
+				411219082E74AAAD000DD102 /* PaginationHelper.swift in Sources */,
+				411219092E74AAAD000DD102 /* IntroView.swift in Sources */,
+				4112190A2E74AAAD000DD102 /* Note.swift in Sources */,
+				4112190B2E74AAAD000DD102 /* AuthToken.swift in Sources */,
+				4112190C2E74AAAD000DD102 /* TokenResponse.swift in Sources */,
+				4112190D2E74AAAD000DD102 /* AuthService.swift in Sources */,
+				4112190E2E74AAAD000DD102 /* SimpleNoteApp.swift in Sources */,
+				4112190F2E74AAAD000DD102 /* LoginView.swift in Sources */,
+				411219102E74AAAD000DD102 /* PreviewHelpers.swift in Sources */,
+				411219112E74AAAD000DD102 /* ProfileView.swift in Sources */,
+				411219122E74AAAD000DD102 /* NotesViewModel.swift in Sources */,
+				411219132E74AAAD000DD102 /* Date+Format.swift in Sources */,
+				411219142E74AAAD000DD102 /* NetworkError.swift in Sources */,
+				411219152E74AAAD000DD102 /* ChangePasswordView.swift in Sources */,
+				411219162E74AAAD000DD102 /* LoadingView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,10 +1,3 @@
-//
-//  TokenResponse.swift
-//  SimpleNote
-//
-//  Created by Ali M.Sh on 4/19/1404 AP.
-//
-
 import Foundation
 
 struct TokenResponse: Codable {
@@ -15,4 +8,8 @@ struct TokenResponse: Codable {
         case accessToken = "access"
         case refreshToken = "refresh"
     }
+}
+
+struct AccessTokenResponse: Codable {
+    let access: String
 }

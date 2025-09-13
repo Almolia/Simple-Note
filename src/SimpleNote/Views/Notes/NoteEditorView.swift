@@ -6,30 +6,29 @@ enum EditorMode {
 }
 
 struct NoteEditorView: View {
+    @ObservedObject var viewModel: NotesViewModel
+    
     var mode: EditorMode
-    var onDelete: () -> Void
-    var onSave: (Note) -> Void
-    var onSaveCreate: (String, String) -> Void
     @Binding var path: NavigationPath
-    @State private var editedText: String
+    
     @State private var editedTitle: String
+    @State private var editedContent: String
     @State private var showDeleteConfirmation = false
     @State private var shouldSave = true
     @Environment(\.dismiss) private var dismiss
     
-    init(mode: EditorMode, path: Binding<NavigationPath>, onDelete: @escaping () -> Void, onSave: @escaping (Note) -> Void, onSaveCreate: @escaping (String, String) -> Void) {
+    init(mode: EditorMode, path: Binding<NavigationPath>, viewModel: NotesViewModel) {
         self.mode = mode
         _path = path
-        self.onDelete = onDelete
-        self.onSave = onSave
-        self.onSaveCreate = onSaveCreate
+        self.viewModel = viewModel
+        
         switch mode {
         case .create:
             _editedTitle = State(initialValue: "")
-            _editedText = State(initialValue: "")
+            _editedContent = State(initialValue: "")
         case .edit(let note):
             _editedTitle = State(initialValue: note.title)
-            _editedText = State(initialValue: note.description)
+            _editedContent = State(initialValue: note.content)
         }
     }
     
@@ -43,25 +42,23 @@ struct NoteEditorView: View {
                     
                     Divider()
                     
-                    // TextEditor with placeholder
                     ZStack(alignment: .topLeading) {
-                        if editedText.isEmpty {
+                        if editedContent.isEmpty {
                             Text("Enter your note here...")
                                 .foregroundColor(.gray)
                                 .font(.system(size: 20))
                                 .padding(.top, 8)
                         }
-                        TextEditor(text: $editedText)
+                        TextEditor(text: $editedContent)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .font(.system(size: 20))
-                            .opacity(editedText.isEmpty ? 0.25 : 1)
+                            .opacity(editedContent.isEmpty ? 0.25 : 1)
                     }
                 }
                 .padding(.horizontal)
                 
                 
                 if case .edit(let note) = mode {
-                    // Footer with last edited date and delete button
                     Divider()
                     HStack {
                         Text("\(formattedLastEditDate(note.updated_at))")
@@ -89,7 +86,6 @@ struct NoteEditorView: View {
             .blur(radius: showDeleteConfirmation ? 3 : 0)
             .disabled(showDeleteConfirmation)
             
-            // Custom delete confirmation popup
             if showDeleteConfirmation {
                 Color.black.opacity(0.4)
                     .ignoresSafeArea()
@@ -98,7 +94,6 @@ struct NoteEditorView: View {
                     }
                 
                 VStack(spacing: 0) {
-                    // Header
                     HStack {
                         Text("Want to Delete this Note?")
                             .font(.system(size: 22, weight: .medium))
@@ -121,11 +116,12 @@ struct NoteEditorView: View {
                     Divider()
                         .padding(.horizontal, 24)
                     
-                    // Delete button
                     Button(action: {
                         shouldSave = false
-                        onDelete()
-                        path = NavigationPath()
+                        if case .edit(let note) = mode {
+                            viewModel.deleteNote(note)
+                        }
+                        path.removeLast()
                     }) {
                         HStack(spacing: 12) {
                             Image(systemName: "trash")
@@ -156,16 +152,20 @@ struct NoteEditorView: View {
         .navigationBarBackButtonHidden(false)
         .navigationBarTitleDisplayMode(.inline)
         .onDisappear {
-            if shouldSave {
-                switch mode {
-                case .create:
-                    onSaveCreate(editedTitle, editedText)
-                case .edit(let note):
-                    var updatedNote = note
-                    updatedNote.title = editedTitle
-                    updatedNote.description = editedText
-                    updatedNote.updated_at = Date()
-                    onSave(updatedNote)
+            guard shouldSave else { return }
+            
+            switch mode {
+            case .create:
+                if !editedTitle.isEmpty || !editedContent.isEmpty {
+                    viewModel.createNote(title: editedTitle, content: editedContent)
+                }
+                
+            case .edit(let note):
+                if note.title != editedTitle || note.content != editedContent {
+                    note.title = editedTitle
+                    note.content = editedContent
+                    note.updated_at = Date()
+                    viewModel.updateNote(note)
                 }
             }
         }

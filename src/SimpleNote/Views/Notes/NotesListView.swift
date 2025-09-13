@@ -1,11 +1,13 @@
 import SwiftUI
+import SwiftData
 
 struct NotesListView: View {
-    @StateObject private var notesViewModel = NotesViewModel(token: TokenManager.shared.getAccessToken() ?? "")
-    
-    @State private var searchText: String = ""
+    @ObservedObject var notesViewModel: NotesViewModel
     @Binding var path: NavigationPath
-
+    
+    @Query(sort: \Note.updated_at, order: .reverse) private var notes: [Note]
+    @State private var searchText: String = ""
+    
     var body: some View {
         ZStack(alignment: .bottom) {
             mainContentView
@@ -13,10 +15,9 @@ struct NotesListView: View {
         }
         .edgesIgnoringSafeArea(.bottom)
         .onAppear {
-            loadNotesIfNeeded()
+            syncNotesIfNeeded()
         }
         .navigationBarBackButtonHidden(true)
-
     }
     
     // MARK: - Main Content View
@@ -25,9 +26,7 @@ struct NotesListView: View {
         VStack(spacing: 0) {
             if notesViewModel.isLoading {
                 loadingView
-            } else if let error = notesViewModel.errorMessage {
-                errorView(error: error)
-            } else if notesViewModel.notes.isEmpty {
+            } else if notes.isEmpty {
                 emptyStateView
             } else {
                 notesListView
@@ -36,20 +35,11 @@ struct NotesListView: View {
         .padding(.horizontal)
     }
     
+    
     // MARK: - Loading View
     private var loadingView: some View {
         VStack {
             ProgressView("Loading notes...")
-            Spacer()
-        }
-    }
-    
-    // MARK: - Error View
-    private func errorView(error: String) -> some View {
-        VStack {
-            Text("Error: \(error)")
-                .foregroundColor(.red)
-                .padding()
             Spacer()
         }
     }
@@ -137,28 +127,28 @@ struct NotesListView: View {
     }
     
     private var notesGridView: some View {
-        let columns = [
-            GridItem(.flexible(), spacing: 12),
-            GridItem(.flexible(), spacing: 12)
-        ]
-        
-        return LazyVGrid(columns: columns, spacing: 12) {
-            ForEach(filteredNotes) { note in
-                NoteRowView(note: note)
-                    .onTapGesture {
-                        path.append(Routes.edit(note.id))
-                    }
+            let columns = [ GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12) ]
+            
+            return LazyVGrid(columns: columns, spacing: 12) {
+                ForEach(filteredNotes) { note in
+                    NoteRowView(note: note)
+                        .onTapGesture {
+                            path.append(Routes.edit(note))
+                        }
+                }
             }
+            .padding(.horizontal, 20)
+            .padding(.top, 20)
         }
-        .padding(.horizontal, 20)
-        .padding(.top, 20)
-    }
     
     private var filteredNotes: [Note] {
-        notesViewModel.notes.filter { note in
-            searchText.isEmpty ||
-            note.title.localizedCaseInsensitiveContains(searchText) ||
-            note.description.localizedCaseInsensitiveContains(searchText)
+        if searchText.isEmpty {
+            return notes
+        } else {
+            return notes.filter { note in
+                note.title.localizedCaseInsensitiveContains(searchText) ||
+                note.content.localizedCaseInsensitiveContains(searchText)
+            }
         }
     }
     
@@ -226,17 +216,17 @@ struct NotesListView: View {
         .buttonStyle(circleButtonStyle())
         .padding(.bottom, 70)
     }
-        
+    
     // MARK: - Helper Methods
-    private func loadNotesIfNeeded() {
-        notesViewModel.fetchNotes()
+    private func syncNotesIfNeeded() {
+        notesViewModel.syncNotes()
     }
 }
 
 // MARK: - Note Row View
 struct NoteRowView: View {
     let note: Note
-
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(note.title)
@@ -246,7 +236,7 @@ struct NoteRowView: View {
                 .truncationMode(.tail)
                 .padding(.vertical)
             
-            Text(note.description)
+            Text(note.content)
                 .font(.system(size: 14))
                 .foregroundColor(.secondary)
                 .lineLimit(7)
@@ -259,7 +249,7 @@ struct NoteRowView: View {
                 .fill(randomPastelColor())
         )
     }
-
+    
     private func randomPastelColor() -> Color {
         let pastelColors: [Color] = [
             Color(red: 0.9, green: 0.8, blue: 1.0),
@@ -288,11 +278,5 @@ struct circleButtonStyle: ButtonStyle {
                     .frame(width: 66, height: 66)
             )
             .scaleEffect(configuration.isPressed ? 1.1 : 1.0)
-    }
-}
-
-#Preview {
-    StatefulPreviewWrapper(NavigationPath()) { path in
-        NotesListView(path: path)
     }
 }
