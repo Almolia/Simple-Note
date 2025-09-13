@@ -67,7 +67,7 @@ The backend is containerized using Docker, making the setup process straightforw
 
 The backend server will be running at `http://localhost:8000`. Migrations are applied automatically on startup.
 
--   **API Access**: The API is available at `http://localhost:8000/api/`.
+-   **API Access**: The API is available at `http://localhost:8000/api/`. If you want to use the provided service, you can replace the URL `http://localhost:8000/api/` in `NoteService` and `AuthService` with `https://simple.darkube.app/api/`!
 -   **API Documentation**:
     -   Swagger UI: `http://localhost:8000/api/schema/swagger-ui/`
     -   Redoc: `http://localhost:8000/api/schema/redoc/`
